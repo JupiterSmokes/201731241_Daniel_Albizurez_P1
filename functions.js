@@ -31,7 +31,10 @@ readFile = (e)=> {
     var reader = new FileReader();
     reader.onload = function (e) {
         text = e.target.result;
-        document.getElementById("textA").innerHTML = text;
+//        alert(text);
+        document.getElementById("textA").value = text;
+        cleanTable("tablaPatrones");
+        cleanTable("tablaErrores");
     };
     reader.readAsText(file);
 }
