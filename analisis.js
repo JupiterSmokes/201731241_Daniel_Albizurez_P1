@@ -108,3 +108,15 @@ fillTable = (tableName, cells, data) =>{
         
     }
 }
+cleanTable = (tableName) => {
+    var table = document.getElementById(tableName);
+    var rows = table.rows;
+    var number = rows.length;
+        for (var i = 1; i < number; i++) {
+            table.deleteRow(1);
+        }
+    }
+
+showWord = (word) => {
+    document.getElementById("wordDisplay").innerHTML = word;
+}
