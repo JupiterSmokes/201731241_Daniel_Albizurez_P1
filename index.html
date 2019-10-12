@@ -1,7 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div id="ikncjp" class="row">
+        <div id="i1ttwq" class="cell">
+            <form id="icpykf" class="form">
+                <div class="form-group">
+                </div>
+                <div class="form-group"><label class="label">Texto Ingresado<br /></label><textarea id="textA"
+                        class="textarea"></textarea></div>
+                <div class="form-group"><input type="file" id="inputFile" onclick="file()" /></div>
+                <button type="button" onclick="getText()"
+                    class="button">Analizar</button>
+            </form>
+        </div>
+        <div id="ird3dt" class="cell">
+            <div id="idea2t">
+                <div>Analizando:
+                </div>
+            </div>
+            <div id="i1pepk">
+                <div id="wordDisplay">[WORD]
+                </div>
+            </div><button type="button" id="ihgn7p"> Siguiente Palabra </button>
+        </div>
+    </div>
+    <div id="ipkdn1" class="row">
+        <div id="izmp1g" class="cell">
+            <table id="tablaPatrones">
+                <tbody>
+                    <tr>
+                        <th>Palabra
+                        </th>
+                        <th>Tipo
+                        </th>
+                        <th>Fila;Columna
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="tablaErrores">
+                <tbody>
+                    <tr>
+                        <th>Error
+                        </th>
+                        <th>Fila;Columna
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script src="analisis.js"></script>
+<script src="functions.js"></script>
 <html>
-    <body>
-        <input type="text" name="" id="entradaPrueba">
-        <button onclick="analize(entradaPrueba.value)">Prueba</button>
-    </body>
-    <script src="analisis.js"></script>
-</html>
