@@ -29,12 +29,15 @@ var acceptanceStates= [1,2,4,5,6,7];
 var currentState;
 //Variable para almacenar el conjunto al que pertenece el caracter analizado
 var currentCharGroup;
-var token;
+//Variable que indica el estado inical para el analisis
+var initialState = 0;
+
+//Funcion que analiza una palabra, indicando a que tipo de token pertenece
 analize = (word) => {
-    var message;
-    var c;
-    length = word.length;
-    currentState = 0;
+    var message; //Mensaje que sera desplegado al finalizar el analisis
+    var c; //Caracter que se encuentra siendo analizado
+    length = word.length; //Tamaño de la palabra que esta siendo analizada
+    currentState = initialState; 
     for (var i=0; i<length;i++ ) {
         c = word.charCodeAt(i);
         currentCol++;
@@ -42,18 +45,18 @@ analize = (word) => {
 /*        console.log(c);
         console.log(currentCharGroup);
         console.log(currentState)
-*/        if(currentState !==8) {
+*/        if(currentState !==8) { //Mientras no se encuentre en estado de error (8) evalua y cambia los estados
             currentState = evaluate(currentState, currentCharGroup);
         } else{
             break;
         }
     }
-    if (!acceptanceStates.includes(currentState)) {
+    if (!acceptanceStates.includes(currentState)) { //Si el estado actual (final) no es parte de los estado de aceptacion, registra un error
         console.log(currentCharGroup + currentState)
         message = "Error";
         fillTable("tablaErrores",2,[word, currentRow +":"+currentCol])
     } 
-    else if(acceptanceStates.includes(currentState)) {
+    else if(acceptanceStates.includes(currentState)) { //Si el estado actual es parte de los estados de aceptacion registra el tipo de token
         message = "Se ha hallado un: " + transitions[currentState]["tipo"];
         tipo = transitions[currentState]["tipo"];
         if (flotante) {
@@ -73,9 +76,9 @@ analize = (word) => {
     }
     console.log(message + " " + word);  
 };
-evaluate = (state,char) => {return transitions[state][char]};
+evaluate = (state,char) => {return transitions[state][char]}; //Recibe el estado actual y el caracter, para determinar el estado siguiente
 
-charGroup = (char) =>  {
+charGroup = (char) =>  { //Determina el conjunto al que pertenece el caracter enviado
     if((char>=97 && char<=122)||(char>=65&&char<=90)){
         return 'l';
     } else if (char>=48 && char<=57) {
@@ -99,6 +102,7 @@ charGroup = (char) =>  {
     }
 }; 
 
+//Funcion encargada de rellenar las tablas de errores y tokens
 fillTable = (tableName, cells, data) =>{
     var table = document.getElementById(tableName);
     var new_Row = table.insertRow(-1);
@@ -108,6 +112,7 @@ fillTable = (tableName, cells, data) =>{
         
     }
 }
+//Vacia la tabla indicada
 cleanTable = (tableName) => {
     var table = document.getElementById(tableName);
     var rows = table.rows;
@@ -116,7 +121,7 @@ cleanTable = (tableName) => {
             table.deleteRow(1);
         }
     }
-
+//Intento de funcion para desplegar una palabra mientras es analizada
 showWord = (word) => {
     document.getElementById("wordDisplay").innerHTML = word;
 }
