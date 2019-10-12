@@ -55,11 +55,21 @@ analize = (word) => {
     } 
     else if(acceptanceStates.includes(currentState)) {
         message = "Se ha hallado un: " + transitions[currentState]["tipo"];
+        tipo = transitions[currentState]["tipo"];
         if (flotante) {
             message += " flotante";
+            tipo += " flotante";
             flotante = false;
         }
-        fillTable("tablaPatrones",3,[word, transitions[currentState]["tipo"], currentRow +":"+currentCol])
+        if (tipo == "Identificador"
+        && (word == "variable" || word == "entero" || word == "decimal"
+        || word == "booleano" || word == "cadena" || word == "si"
+        || word == "sino" || word == "mientras" || word == "hacer")) {
+            tipo = "Palabra Reservada";
+        } else if (word == "VERDADERO" || word == "FALSO"){
+            tipo = "Boolean";
+        }
+        fillTable("tablaPatrones",3,[word,tipo, currentRow +":"+currentCol])
     }
     console.log(message + " " + word);  
 };
