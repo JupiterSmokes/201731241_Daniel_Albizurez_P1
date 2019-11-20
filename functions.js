@@ -9,13 +9,14 @@ getText = () => {
     rows = text.split('\n'); //Divide el texto en filas y las almacena
     for (let i = 0; i < rows.length; i++) { //Loop For para recorrer todas las palabras del texto, fila por fila
         words = rows[i].trim().split(' ');
-        currentRow = i+1;
+        currentRow = i+1;   
         currentCol = 1;
         for (let j = 0; j < words.length; j++) {
             analize(words[j]);
             console.log(currentRow,currentCol-1);
             currentCol++;
-        }        
+        }
+        console.log(sintactic());
     }
 }
 //Funcion que agrega un manejador de eventos al input file

@@ -2,13 +2,13 @@
 var transitions = {
     0:{'l':1,'n':2, "op":4, "op2":5, '=':5, 'a':6, 's':7 , '.':8,'e':8},
     //'l':1,'n':2, "op":4, "op2":5, '=':5, 'a':6, 's':7 ,'e':8
-    1:{'l':1, 'n':1, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8,'e':8, "tipo":"Identificador"},
-    2:{'l':8, 'n':2, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':3,'e':8, "tipo":"Numero"},
+    1:{'l':1, 'n':1, "op":0, "op2":0, '=':0, 'a':8, 's':0, '.':8,'e':8, "tipo":"Identificador"},
+    2:{'l':8, 'n':2, "op":0, "op2":0, '=':0, 'a':8, 's':0, '.':3,'e':8, "tipo":"Numero"},
     3:{'l':8, 'n':2, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8,'e':8},
-    4:{'l':8, 'n':8, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8, 'e':8, "tipo":"Operador"},
-    5:{'l':8, 'n':2, "op":8, "op2":8, '=':4, 'a':8, 's':8, '.':8, 'e':8,"tipo":"Operador"},
-    6:{'l':8, 'n':2, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8,'e':8, "tipo":"Agrupacion"},
-    7:{'l':8, 'n':2, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8,'e':8, "tipo":"Signo"},
+    4:{'l':8, 'n':0, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8, 'e':8, "tipo":"Operador"},
+    5:{'l':8, 'n':0, "op":8, "op2":8, '=':4, 'a':8, 's':8, '.':8, 'e':8,"tipo":"Operador"},
+    6:{'l':8, 'n':0, "op":8, "op2":8, '=':8, 'a':8, 's':8, '.':8,'e':8, "tipo":"Agrupacion"},
+    7:{'l':0, 'n':0, "op":0, "op2":0, '=':0, 'a':0, 's':0, '.':0,'e':8, "tipo":"Signo"},
     8:{"tipo":"Error"}
 };
 var flotante = false;
@@ -32,33 +32,49 @@ var currentCharGroup;
 //Variable que indica el estado inical para el analisis
 var initialState = 0;
 
+var textAnalized = "";
+
 //Funcion que analiza una palabra, indicando a que tipo de token pertenece
 analize = (word) => {
     var message; //Mensaje que sera desplegado al finalizar el analisis
     var c; //Caracter que se encuentra siendo analizado
+    var nextState;
+    var analized = "";
     length = word.length; //Tamaño de la palabra que esta siendo analizada
     currentState = initialState; 
     for (var i=0; i<length;i++ ) {
         c = word.charCodeAt(i);
         currentCol++;
         currentCharGroup = charGroup(c);
+        nextState = evaluate(currentState, currentCharGroup);
 /*        console.log(c);
         console.log(currentCharGroup);
         console.log(currentState)
-*/        if(currentState !==8) { //Mientras no se encuentre en estado de error (8) evalua y cambia los estados
-            currentState = evaluate(currentState, currentCharGroup);
+*/        if(nextState == 0) { //Mientras no se encuentre en estado de error (8) evalua y cambia los estados
+            accept(currentState, analized);
+            currentState = evaluate(nextState, currentCharGroup);
+            analized = "";
         } else{
-            break;
+            currentState = nextState;
         }
+        analized += word.charAt(i);
     }
-    if (!acceptanceStates.includes(currentState)) { //Si el estado actual (final) no es parte de los estado de aceptacion, registra un error
-        console.log(currentCharGroup + currentState)
+  accept(currentState, analized);
+};
+
+sintactic = () => {console.log( textAnalized);
+textAnalized = "\n";
+}
+
+accept = (state, word) => {
+    if (!acceptanceStates.includes(state)) { //Si el estado actual (final) no es parte de los estado de aceptacion, registra un error
+        console.log(currentCharGroup + state)
         message = "Error";
         fillTable("tablaErrores",2,[word, currentRow +":"+currentCol])
     } 
-    else if(acceptanceStates.includes(currentState)) { //Si el estado actual es parte de los estados de aceptacion registra el tipo de token
-        message = "Se ha hallado un: " + transitions[currentState]["tipo"];
-        tipo = transitions[currentState]["tipo"];
+    else if(acceptanceStates.includes(state)) { //Si el estado actual es parte de los estados de aceptacion registra el tipo de token
+        message = "Se ha hallado un: " + transitions[state]["tipo"];
+        tipo = transitions[state]["tipo"];
         if (flotante) {
             message += " flotante";
             tipo += " flotante";
@@ -74,8 +90,10 @@ analize = (word) => {
         }
         fillTable("tablaPatrones",3,[word,tipo, currentRow +":"+currentCol])
     }
-    console.log(message + " " + word);  
+    textAnalized += " " + tipo;
+    console.log(message + " " + word);
 };
+
 evaluate = (state,char) => {return transitions[state][char]}; //Recibe el estado actual y el caracter, para determinar el estado siguiente
 
 charGroup = (char) =>  { //Determina el conjunto al que pertenece el caracter enviado
@@ -109,7 +127,6 @@ fillTable = (tableName, cells, data) =>{
     for (let i = 0; i < cells; i++) {
         var cell = new_Row.insertCell(i)
         cell.innerHTML = data[i];
-        
     }
 }
 //Vacia la tabla indicada
